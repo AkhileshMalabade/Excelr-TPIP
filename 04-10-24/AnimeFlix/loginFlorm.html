@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimFlix-Login</title>
+    <link rel="icon" href="logo.png">
+    <style>
+        body{
+            background-image: url(https://cdn.wallpapersafari.com/28/72/eMnp5F.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0px;
+            overflow: hidden;
+        }
+        #logo{
+            height: 100px;
+            margin-left: 150px;
+        }
+        #main{
+            padding-top: 100px;
+            padding-left: 750px;
+            width: 100%;
+            height: 815px;
+            background-color: rgba(0, 0, 0, 0.329);
+            box-shadow: 15px;
+        }
+        #formBody{
+            width: max-content;
+            box-shadow: 15px;
+            color: white;
+            padding: 50px 50px 50px;
+            font-family: sans-serif;
+            background-color: rgba(0, 0, 0, 0.712);
+        }
+        .formInput{
+            height: 45px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+            padding: 0px 0px 0px 10px;
+        }
+        input[type=text] {
+        width: 100%;
+        border: none;
+        background-color: #575757d0;
+        color: white;
+        font-size: 20px;
+        }
+        #signIn{
+            background-color: #DB202C;
+            color: white;
+            padding: 0px;
+            width: 310px;
+            font-size: 20px;
+        }
+        #signInCode{
+            background-color: rgba(117, 117, 117, 0.747);  
+            color: white;
+            font-weight: 500;
+            width: 310px;
+            font-size: 20px;
+        }
+        #checkbox{
+            height: 20px;
+            width: 20px;
+        }
+        .links{
+            color: rgb(131, 131, 131);
+        }
+        header{
+            background-color: rgba(0, 0, 0, 0.329);
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header">
+            <img id="logo" src="logo.png" alt="" >
+        </div>
+    </header>
+    <div id="main">
+        <div id="formBody">
+            <form action="home.html">
+                <h1>Sign In</h1><br>
+                <center>
+                <input class="formInput" type="text" placeholder="Username" required> <br> <br>
+                <input class="formInput" type="text" placeholder="Password" required> <br> <br>
+                <button type="submit" class="formInput" id="signIn">Sign In</button>
+                <h3 class="links">OR</h3>
+                <button id="signInCode" class="formInput" type="submit">Use Sign-In Code</button> <br><br>
+                <a href="" class="links">Forgot Password?</a>
+                </center>
+                <br>
+                <input id="checkbox" type="checkbox" name="remember" value="Remember Me"> Remember Me <br><br>
+                <a href="" class="links">Don't have an account? Sign Up</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

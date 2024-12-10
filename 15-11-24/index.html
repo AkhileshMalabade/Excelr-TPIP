@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #f8f9fa; 
+            font-family: Arial, sans-serif; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin-top: 50px; 
+        }
+        .card { 
+            border: none; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        .btn-custom { 
+            background-color: #e9ecef; 
+            border: 1px solid #ccc; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="welcomeSection" class="card">
+        <div class="card-header text-center"><h2>Quiz App</h2><p>Choose a test to get started</p></div>
+        <div class="card-body">
+            <form>
+                <div class="mb-3">
+                    <label for="quizSelect" class="form-label">Select a Quiz</label>
+                    <select class="form-select" id="quizSelect">
+                        <option value="1">General Knowledge</option>
+                        <option value="2">Science</option>
+                        <option value="3">History</option>
+                        <option value="4">Technology</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="startQuiz()">Start Quiz</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="quizSection" class="card" style="display: none;">
+        <div class="card-header text-center"><h2>Question <span id="questionNumber">1</span> of <span id="totalQuestions">5</span></h2></div>
+        <div class="card-body">
+            <div id="questionContainer"></div>
+            <button type="button" id="nextButton" class="btn btn-primary w-100 mt-3" onclick="navigateQuestion(1)" disabled>Next</button>
+        </div>
+    </div>
+
+    <div id="resultSection" class="card" style="display: none;">
+        <div class="card-header text-center"><h2>Quiz Completed!</h2></div>
+        <div class="card-body">
+            <h4>Your Score: <span id="score"></span></h4>
+            <button class="btn btn-primary w-100" onclick="restartQuiz()">Try Again</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const generalKnowledge = [
+        { question: "What is the capital of France?", options: ["Paris", "Berlin", "Madrid", "Rome"], answer: 0 },
+        { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Saturn"], answer: 1 },
+        { question: "Who wrote 'Hamlet'?", options: ["Shakespeare", "Dickens", "Hemingway", "Austen"], answer: 0 },
+        { question: "What is the speed of light?", options: ["300,000 km/s", "400,000 km/s", "500,000 km/s", "600,000 km/s"], answer: 0 },
+        { question: "What is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: 3 }
+    ];
+    const science = [
+        { question: "What is the atomic number of gold?", options: ["79", "197", "209", "210"], answer: 0 },
+        { question: "Which planet is known as the 'Blue Planet'?", options: ["Venus", "Earth", "Mars", "Jupiter"], answer: 1 },
+        { question: "Who discovered the structure of DNA?", options: ["James Watson", "Francis Crick", "Rosalind Franklin", "Maurice Wilkins"], answer: 0 },
+        { question: "What is the speed of sound?", options: ["340,000 m/s", "343,000 m/s", "347,000 m/s", "350,000 m/s"], answer: 0 },
+        { question: "What is the largest continent on Earth?", options: ["Africa", "Asia", "Europe", "North America"], answer: 3 }
+    ];
+    const history = [
+        { question: "Who wrote the Declaration of Independence?", options: ["Thomas Jefferson", "Benjamin Franklin", "George Washington", "John Adams"], answer: 0 },
+        { question: "Which country was the first to colonize the Americas?", options: ["Spain", "Portugal", "England", "France"], answer: 1 },
+        { question: "Who wrote the Bible?", options: ["Moses", "Christ", "Muhammad", "Jesus"], answer: 0 },
+        { question: "What was the first satellite to orbit the Earth?", options: ["Sputnik 1", "Sputnik 2", "Sputnik 3", "Sputnik 4"], answer: 0 },
+        { question: "What was the first country to have a computer?", options: ["China", "India", "United States", "Russia"], answer: 1 }
+    ];
+    const technology = [
+        { question: "What is the most powerful computer in the world?", options: ["IBM", "Apple", "Microsoft", "Google"], answer: 0 },
+        { question: "Which country is known as the 'Silicon Valley'?", options: ["United States", "China", "Japan", "Germany"], answer: 1 },
+        { question: "Who invented the internet?", options: ["Tim Berners-Lee", "Vint Cerf", "Jay Leno", "Bill Gates"], answer: 0 },
+        { question: "What is the most powerful supercomputer in the world?", options: ["IBM", "Apple", "Microsoft", "Google"], answer: 0 },
+        { question: "What is the most powerful battery in the world?", options: ["Tesla", "NiMH", "Li-ion", "LiPo"], answer: 0 }
+    ];
+    let quizQuestions = [];
+
+    let currentQuestionIndex = 0;
+    let selectedAnswers = [];
+
+    function startQuiz() {
+        document.getElementById('welcomeSection').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'block';
+        switch (document.getElementById('quizSelect').value) {
+            case '1':
+                quizQuestions = generalKnowledge;
+                break;
+            case '2':
+                quizQuestions = science;
+                break;
+            case '3':
+                quizQuestions = history;
+                break;
+            case '4':
+                quizQuestions = technology;
+                break;
+        }
+        document.getElementById('totalQuestions').textContent = quizQuestions.length;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const questionData = quizQuestions[currentQuestionIndex];
+        document.getElementById('questionNumber').textContent = currentQuestionIndex + 1;
+
+        let answersHTML = questionData.options.map((option, index) =>
+            `<div class="form-check">
+                <input class="form-check-input" type="radio" name="answer" value="${index}" onclick="enableNextButton()">
+                <label class="form-check-label">${option}</label>
+            </div>`
+        ).join('');
+
+        document.getElementById('questionContainer').innerHTML = `
+            <h4>${questionData.question}</h4>
+            <div>${answersHTML}</div>
+        `;
+    }
+
+    function enableNextButton() {
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+        if (selectedOption) {
+            document.getElementById('nextButton').disabled = false;
+        }
+    }
+
+    function navigateQuestion(direction) {
+        const selectedOption = document.querySelector('input[name="answer"]:checked');
+        if (selectedOption) {
+            selectedAnswers[currentQuestionIndex] = parseInt(selectedOption.value);
+        }
+
+        currentQuestionIndex += direction;
+        if (currentQuestionIndex >= quizQuestions.length) {
+            showResults();
+        } else {
+            loadQuestion();
+            document.getElementById('nextButton').disabled = true;
+        }
+    }
+
+    function showResults() {
+        let score = 0;
+        quizQuestions.forEach((question, index) => {
+            if (selectedAnswers[index] === question.answer) score++;
+        });
+        
+        document.getElementById('quizSection').style.display = 'none';
+        document.getElementById('resultSection').style.display = 'block';
+        document.getElementById('score').textContent = `${score} / ${quizQuestions.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        selectedAnswers = [];
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('welcomeSection').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
